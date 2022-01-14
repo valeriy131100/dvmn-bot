@@ -4,12 +4,10 @@ import requests
 from dotenv import load_dotenv
 from requests.exceptions import ConnectionError, ReadTimeout
 
-if __name__ == '__main__':
-    load_dotenv()
-    dvmn_token = os.getenv('DVMN_TOKEN')
 
+def longpoll_dvmn(token):
     headers = {
-        'Authorization': f'Token {dvmn_token}'
+        'Authorization': f'Token {token}'
     }
 
     url = 'https://dvmn.org/api/long_polling/'
@@ -30,11 +28,19 @@ if __name__ == '__main__':
             response.raise_for_status()
 
             api_answer = response.json()
-            print(api_answer)
             if api_answer['status'] == 'timeout':
                 timestamp = api_answer['timestamp_to_request']
             else:
                 timestamp = api_answer['last_attempt_timestamp']
+                yield api_answer
 
-        except (ReadTimeout, ConnectionError) as e:
+        except (ReadTimeout, ConnectionError):
             continue
+
+
+if __name__ == '__main__':
+    load_dotenv()
+    dvmn_token = os.getenv('DVMN_TOKEN')
+
+    for event in longpoll_dvmn(dvmn_token):
+        print(event)
