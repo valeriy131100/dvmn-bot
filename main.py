@@ -13,5 +13,6 @@ if __name__ == '__main__':
 
     url = 'https://dvmn.org/api/long_polling/'
 
-    response = requests.get(url, headers=headers, timeout=90)
-    print(response.json())
+    while True:
+        response = requests.get(url, headers=headers, timeout=90)
+        print(response.json())
