@@ -43,7 +43,7 @@ if __name__ == '__main__':
     load_dotenv()
     dvmn_token = os.getenv('DVMN_TOKEN')
     telegram_token = os.getenv('TELEGRAM_TOKEN')
-    chat_id = 363741056
+    telegram_chat_id = os.getenv('TELEGRAM_CHAT_ID')
     telegram_bot = telegram.Bot(token=telegram_token)
 
     success_message = ('Преподавателю всё понравилось,'
@@ -64,7 +64,7 @@ if __name__ == '__main__':
             )
 
             telegram_bot.send_message(
-                chat_id=chat_id,
+                chat_id=telegram_chat_id,
                 text=message,
                 parse_mode='MarkdownV2'
             )
