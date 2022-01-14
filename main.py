@@ -11,9 +11,7 @@ if __name__ == '__main__':
         'Authorization': f'Token {dvmn_token}'
     }
 
-    url = 'https://dvmn.org/api/user_reviews/'
+    url = 'https://dvmn.org/api/long_polling/'
 
-    response = requests.get(url, headers=headers)
-    response.raise_for_status()
-
+    response = requests.get(url, headers=headers, timeout=90)
     print(response.json())
