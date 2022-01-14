@@ -1,6 +1,7 @@
 import os
 
 import requests
+from requests.exceptions import ReadTimeout, ConnectionError
 from dotenv import load_dotenv
 
 if __name__ == '__main__':
@@ -14,5 +15,8 @@ if __name__ == '__main__':
     url = 'https://dvmn.org/api/long_polling/'
 
     while True:
-        response = requests.get(url, headers=headers, timeout=90)
-        print(response.json())
+        try:
+            response = requests.get(url, headers=headers, timeout=90)
+            print(response.json())
+        except (ReadTimeout, ConnectionError):
+            continue
