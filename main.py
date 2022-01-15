@@ -1,4 +1,5 @@
 import os
+from textwrap import dedent
 
 import requests
 import telegram
@@ -46,8 +47,9 @@ if __name__ == '__main__':
     telegram_chat_id = os.getenv('TELEGRAM_CHAT_ID')
     telegram_bot = telegram.Bot(token=telegram_token)
 
-    success_message = ('Преподавателю всё понравилось,'
-                       ' можно приступать к следующему уроку\\.')
+    success_message = '''
+    Преподавателю всё понравилось, можно приступать к следующему уроку\\.
+    '''
 
     failure_message = 'К сожалению, в работе нашлись ошибки\\.'
 
@@ -57,14 +59,15 @@ if __name__ == '__main__':
             lesson_url = review['lesson_url']
             is_negative = review['is_negative']
 
-            message = (
-                f'Преподаватель проверил работу '
-                f'[{lesson_title}]({lesson_url})\\.\n\n'
-                f'{failure_message if is_negative else success_message}'
-            )
+            message = f'''
+            Преподаватель проверил работу
+            [{lesson_title}]({lesson_url})\\.
+                
+            {failure_message if is_negative else success_message}
+            '''
 
             telegram_bot.send_message(
                 chat_id=telegram_chat_id,
-                text=message,
+                text=dedent(message),
                 parse_mode='MarkdownV2'
             )
