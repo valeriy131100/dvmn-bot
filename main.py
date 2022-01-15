@@ -30,12 +30,12 @@ def longpoll_dvmn(token):
             )
             response.raise_for_status()
 
-            api_answer = response.json()
-            if api_answer['status'] == 'timeout':
-                timestamp = api_answer['timestamp_to_request']
+            event = response.json()
+            if event['status'] == 'timeout':
+                timestamp = event['timestamp_to_request']
             else:
-                timestamp = api_answer['last_attempt_timestamp']
-                yield api_answer
+                timestamp = event['last_attempt_timestamp']
+                yield event
 
         except ReadTimeout:
             continue
