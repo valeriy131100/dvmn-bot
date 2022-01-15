@@ -1,3 +1,4 @@
+import time
 import os
 from textwrap import dedent
 
@@ -36,8 +37,11 @@ def longpoll_dvmn(token):
                 timestamp = api_answer['last_attempt_timestamp']
                 yield api_answer
 
-        except (ReadTimeout, ConnectionError):
+        except ReadTimeout:
             continue
+
+        except ConnectionError:
+            time.sleep(60)
 
 
 if __name__ == '__main__':
