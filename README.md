@@ -23,6 +23,8 @@ $ pip install -r requirements.txt
 ```
 
 ## Использование
+
+### Запуск локально
 Заполните файл .env.example и переименуйте его в .env или иным образом задайте переменные среды:
 * DVMN_TOKEN - токен к [Devman API](https://dvmn.org/api/docs/).
 * TELEGRAM_TOKEN - токен бота Telegram. Можно получить у [@BotFather](https://t.me/BotFather).
@@ -35,4 +37,10 @@ $ pip install -r requirements.txt
 $ venv/bin/python main.py
 ```
 
-Бот запустится и будет отправлять вам в личные сообщения новые проверки на dvmn.
+### Деплой на [Heroku](https://heroku.com/)
+
+1. Зарегистрируйтесь и создайте приложение Heroku.
+2. Соедините аккаунт Heroku и GitHub и выберите этот репозиторий.
+3. Перейдите в раздел `Settings - Config Vars` и задайте те же переменные среды, что и для запуска локально.
+4. Вернитесь к разделу `Deploy`, пролистните до самого конца и нажмите на кнопку `Deploy Branch`.
+5. Перейдите в раздел `Resources` и запустите dyno для `bot`.
