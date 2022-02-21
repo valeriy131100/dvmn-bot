@@ -29,7 +29,6 @@ class TelegramBotLogHandler(logging.Handler):
             chat_id=self.chat_id,
             text=dedent(f'''
             {start_text}:
-            
             ```
             {log_entry}
             ```
@@ -91,21 +90,25 @@ if __name__ == '__main__':
     logger.addHandler(TelegramBotLogHandler(telegram_bot, telegram_chat_id))
     logger.info('Бот запущен')
 
-    for event in longpoll_dvmn(dvmn_token):
-        for review in event['new_attempts']:
-            lesson_title = review['lesson_title']
-            lesson_url = review['lesson_url']
-            is_negative = review['is_negative']
+    while True:
+        try:
+            for event in longpoll_dvmn(dvmn_token):
+                for review in event['new_attempts']:
+                    lesson_title = review['lesson_title']
+                    lesson_url = review['lesson_url']
+                    is_negative = review['is_negative']
 
-            message = f'''
-            Преподаватель проверил работу
-            [{lesson_title}]({lesson_url})\\.
-                
-            {failure_message if is_negative else success_message}
-            '''
+                    message = f'''
+                    Преподаватель проверил работу
+                    [{lesson_title}]({lesson_url})\\.
+                        
+                    {failure_message if is_negative else success_message}
+                    '''
 
-            telegram_bot.send_message(
-                chat_id=telegram_chat_id,
-                text=dedent(message),
-                parse_mode='MarkdownV2'
-            )
+                    telegram_bot.send_message(
+                        chat_id=telegram_chat_id,
+                        text=dedent(message),
+                        parse_mode='MarkdownV2'
+                    )
+        except Exception as error:
+            logger.error(error, exc_info=True)
