@@ -1,11 +1,41 @@
-import time
+import logging
 import os
+import time
 from textwrap import dedent
 
 import requests
 import telegram
 from dotenv import load_dotenv
 from requests.exceptions import ConnectionError, ReadTimeout
+
+logger = logging.getLogger('dvmn_bot_logger')
+
+
+class TelegramBotLogHandler(logging.Handler):
+    def __init__(self, bot: telegram.Bot, chat_id, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.bot = bot
+        self.chat_id = chat_id
+
+    def emit(self, record):
+        log_entry = self.format(record)
+
+        if record.levelno > logging.WARNING:
+            start_text = 'Бот упал с ошибкой'
+        else:
+            start_text = 'Бот сообщает, что'
+
+        self.bot.send_message(
+            chat_id=self.chat_id,
+            text=dedent(f'''
+            {start_text}:
+            
+            ```
+            {log_entry}
+            ```
+            '''),
+            parse_mode='MarkdownV2'
+        )
 
 
 def longpoll_dvmn(token):
@@ -56,6 +86,10 @@ if __name__ == '__main__':
     '''
 
     failure_message = 'К сожалению, в работе нашлись ошибки\\.'
+
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(TelegramBotLogHandler(telegram_bot, telegram_chat_id))
+    logger.info('Бот запущен')
 
     for event in longpoll_dvmn(dvmn_token):
         for review in event['new_attempts']:
