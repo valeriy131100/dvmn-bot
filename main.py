@@ -37,48 +37,17 @@ class TelegramBotLogHandler(logging.Handler):
         )
 
 
-def longpoll_dvmn(token):
-    headers = {
-        'Authorization': f'Token {token}'
-    }
-
-    url = 'https://dvmn.org/api/long_polling/'
-
-    timestamp = None
-    while True:
-        try:
-            params = {
-                'timestamp': timestamp
-            }
-
-            response = requests.get(
-                url,
-                params=params,
-                headers=headers,
-                timeout=91
-            )
-            response.raise_for_status()
-
-            event = response.json()
-            if event['status'] == 'timeout':
-                timestamp = event['timestamp_to_request']
-            else:
-                timestamp = event['last_attempt_timestamp']
-                yield event
-
-        except ReadTimeout:
-            continue
-
-        except ConnectionError:
-            time.sleep(60)
-
-
 if __name__ == '__main__':
     load_dotenv()
-    dvmn_token = os.getenv('DVMN_TOKEN')
     telegram_token = os.getenv('TELEGRAM_TOKEN')
     telegram_chat_id = os.getenv('TELEGRAM_CHAT_ID')
     telegram_bot = telegram.Bot(token=telegram_token)
+
+    dvmn_token = os.getenv('DVMN_TOKEN')
+    dvmn_longpoll = 'https://dvmn.org/api/long_polling/'
+    dvmn_headers = {
+        'Authorization': f'Token {dvmn_token}'
+    }
 
     success_message = '''
     Преподавателю всё понравилось, можно приступать к следующему уроку\\.
@@ -90,9 +59,24 @@ if __name__ == '__main__':
     logger.addHandler(TelegramBotLogHandler(telegram_bot, telegram_chat_id))
     logger.info('Бот запущен')
 
+    timestamp = None
+
     while True:
         try:
-            for event in longpoll_dvmn(dvmn_token):
+            response = requests.get(
+                dvmn_longpoll,
+                params={'timestamp': timestamp},
+                headers=dvmn_headers,
+                timeout=91
+            )
+            response.raise_for_status()
+
+            event = response.json()
+            if event['status'] == 'timeout':
+                timestamp = event['timestamp_to_request']
+            else:
+                timestamp = event['last_attempt_timestamp']
+
                 for review in event['new_attempts']:
                     lesson_title = review['lesson_title']
                     lesson_url = review['lesson_url']
@@ -110,5 +94,9 @@ if __name__ == '__main__':
                         text=dedent(message),
                         parse_mode='MarkdownV2'
                     )
+        except ReadTimeout:
+            continue
+        except ConnectionError:
+            time.sleep(60)
         except Exception as error:
             logger.error(error, exc_info=True)
