@@ -1,3 +1,4 @@
+import html
 import logging
 import os
 import time
@@ -18,7 +19,7 @@ class TelegramBotLogHandler(logging.Handler):
         self.chat_id = chat_id
 
     def emit(self, record):
-        log_entry = self.format(record)
+        log_entry = html.escape(self.format(record))
 
         if record.levelno > logging.WARNING:
             start_text = 'Бот упал с ошибкой'
@@ -29,11 +30,9 @@ class TelegramBotLogHandler(logging.Handler):
             chat_id=self.chat_id,
             text=dedent(f'''
             {start_text}:
-            ```
-            {log_entry}
-            ```
+            <pre>{log_entry}</pre>
             '''),
-            parse_mode='MarkdownV2'
+            parse_mode='HTML'
         )
 
 
@@ -50,16 +49,16 @@ if __name__ == '__main__':
     }
 
     success_message = '''
-    Преподавателю всё понравилось, можно приступать к следующему уроку\\.
+    Преподавателю всё понравилось, можно приступать к следующему уроку.
     '''
 
-    failure_message = 'К сожалению, в работе нашлись ошибки\\.'
+    failure_message = 'К сожалению, в работе нашлись ошибки.'
 
     logger.setLevel(logging.DEBUG)
     logger.addHandler(TelegramBotLogHandler(telegram_bot, telegram_chat_id))
     logger.info('Бот запущен')
 
-    timestamp = None
+    timestamp = 1645518191
 
     while True:
         try:
@@ -84,7 +83,7 @@ if __name__ == '__main__':
 
                     message = f'''
                     Преподаватель проверил работу
-                    [{lesson_title}]({lesson_url})\\.
+                    <a href="{lesson_url}">{lesson_title}]</a>.
                         
                     {failure_message if is_negative else success_message}
                     '''
@@ -92,7 +91,7 @@ if __name__ == '__main__':
                     telegram_bot.send_message(
                         chat_id=telegram_chat_id,
                         text=dedent(message),
-                        parse_mode='MarkdownV2'
+                        parse_mode='HTML'
                     )
         except ReadTimeout:
             continue
