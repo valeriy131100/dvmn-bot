@@ -58,7 +58,7 @@ if __name__ == '__main__':
     logger.addHandler(TelegramBotLogHandler(telegram_bot, telegram_chat_id))
     logger.info('Бот запущен')
 
-    timestamp = 1645518191
+    timestamp = None
 
     while True:
         try:
