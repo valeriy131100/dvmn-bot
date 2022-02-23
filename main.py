@@ -83,7 +83,7 @@ if __name__ == '__main__':
 
                     message = f'''
                     Преподаватель проверил работу
-                    <a href="{lesson_url}">{lesson_title}]</a>.
+                    <a href="{lesson_url}">{lesson_title}</a>.
                         
                     {failure_message if is_negative else success_message}
                     '''
