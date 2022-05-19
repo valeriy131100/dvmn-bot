@@ -96,8 +96,8 @@ if __name__ == '__main__':
             for event in longpoll_dvmn(dvmn_token):
                 for review in event['new_attempts']:
                     lesson_title = html.escape(review['lesson_title'])
-                    lesson_url = html.escape(review['lesson_url'])
-                    is_negative = html.escape(review['is_negative'])
+                    lesson_url = review['lesson_url']
+                    is_negative = review['is_negative']
 
                     message = f'''
                     Преподаватель проверил работу
