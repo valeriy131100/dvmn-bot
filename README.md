@@ -37,7 +37,7 @@ $ venv/bin/python main.py
 ```
 
 ### Запуск локально с помощью Docker
-Вам понадобится установленный git и [Docker](https://docs.docker.com/get-docker/).
+Вам понадобится установленный git, [Docker](https://docs.docker.com/get-docker/) и [Docker Compose](https://docs.docker.com/compose/install/).
 
 Склонируйте репозиторий:
 ```bash
@@ -51,7 +51,12 @@ $ git clone https://github.com/valeriy131100/dvmn-bot
 
 В папке со скачанным репозиторием исполните:
 ```bash
-$ docker-compose build && docker-compose up -d
+$ docker-compose build
+```
+
+Для запуска созданного контейнера исполните:
+```bash
+$ docker-compose up -d
 ```
 
 ### Деплой на [Heroku](https://heroku.com/)
