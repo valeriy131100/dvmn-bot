@@ -5,6 +5,4 @@ services:
     build: ./
     command: python main.py
     working_dir: /app
-    volumes:
-      - ./:/app
     env_file: .env
