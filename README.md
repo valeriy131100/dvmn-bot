@@ -39,20 +39,24 @@ $ venv/bin/python main.py
 ### Запуск локально с помощью Docker
 Вам понадобится установленный git, [Docker](https://docs.docker.com/get-docker/) и [Docker Compose](https://docs.docker.com/compose/install/).
 
+#### Сборка
+
 Склонируйте репозиторий:
 ```bash
 $ git clone https://github.com/valeriy131100/dvmn-bot
 ```
 
-Заполните файл .env.example и переименуйте его в .env:
-* DVMN_TOKEN - токен к [Devman API](https://dvmn.org/api/docs/).
-* TELEGRAM_TOKEN - токен бота Telegram. Можно получить у [@BotFather](https://t.me/BotFather).
-* TELEGRAM_CHAT_ID - ваш идентификатор Telegram. Можно узнать у бота [@userinfobot](https://t.me/userinfobot).
-
 В папке со скачанным репозиторием исполните:
 ```bash
 $ docker-compose build
 ```
+
+#### Запуск
+
+Заполните файл .env.example и переименуйте его в .env:
+* DVMN_TOKEN - токен к [Devman API](https://dvmn.org/api/docs/).
+* TELEGRAM_TOKEN - токен бота Telegram. Можно получить у [@BotFather](https://t.me/BotFather).
+* TELEGRAM_CHAT_ID - ваш идентификатор Telegram. Можно узнать у бота [@userinfobot](https://t.me/userinfobot).
 
 Для запуска созданного контейнера исполните:
 ```bash

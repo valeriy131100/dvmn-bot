@@ -5,4 +5,7 @@ services:
     build: ./
     command: python main.py
     working_dir: /app
-    env_file: .env
+    environment:
+      - DVMN_TOKEN=${DVMN_TOKEN}
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
